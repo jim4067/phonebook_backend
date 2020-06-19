@@ -7,10 +7,10 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui" : "rm -rf build && cd ../fullstackopen.com/'part 2'/thephonebook && npm run build --prod && cp -r build ../../../phonebook_backend",
-    "deploy" : "git push heroku master",
-    "deploy:full" : "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod" : "heroku logs --tail" 
+    "build:ui": "rm -rf build && cd ../fullstackopen.com/'part 2'/thephonebook && npm run build --prod && cp -r build ../../../phonebook_backend",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
+    "logs:prod": "heroku logs --tail"
   },
   "author": "jim_4067",
   "license": "ISC",
@@ -20,6 +20,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.9.19",
     "morgan": "^1.10.0"
   }
 }
