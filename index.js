@@ -36,16 +36,26 @@ app.get('/api/persons/:id', (req, res) => {
     const id = req.params.id;
 
     Person.findById(id)
-        .then((person) => {
-            res.json(person);
-        })
+          .then( person => {
+              if(person === null || undefined ){
+                  res.status(404).end();
+              } else {
+                  res.json(person)
+              }
+          }) 
+          .catch( (err) => {
+              next(err)
+          })
 });
-
 
 
 //making a POST request
 app.post('/api/persons', (req, res) => {
     const body = req.body;
+
+    if(body.content === undefined || null ){
+        res.status(404).send({ erro: "body undefined or null "});
+    }
 
     const person = new Person({
         name: body.name,
@@ -70,6 +80,23 @@ app.delete('/api/persons/:id', (req, res, next) => {
               next(err)
           })
 });
+
+//unknown endpoint
+const unknown_endpoint = (req, res) => {
+    res.status(404).send({error: "unknown endpoint"})
+}
+app.use(unknown_endpoint);
+
+//error middleware. 
+const error_handler = (err , req, res, next) => {
+    console.error(err);
+
+    if (err.name === 'CastError' && err.kind === 'objectId'){
+        return res.status(404).send({error : "malforamtted id"});
+    }
+    next(err)
+}
+app.use(error_handler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
