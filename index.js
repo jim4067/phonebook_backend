@@ -68,6 +68,27 @@ app.post('/api/persons', (req, res) => {
         })
 });
 
+//updating a resource
+//when you get the names in a dn array then comapre it with the nam in  the body of the request
+
+app.put( '/api/persons',(req, res, next) => {
+    const body = req.body;
+
+    const person = {
+        name : body.name,
+        number: body.number
+    }
+
+    Person.findOneAndUpdate( {name : body.name}, {number: body.number}, { new: true }, (err, result) => {
+        if(err){
+            res.json({"there was an error in your request" : err});
+        } else (
+            res.json(result)
+        )
+    }); 
+
+})
+
 //deleting a single resource
 app.delete('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
