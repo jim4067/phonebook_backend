@@ -74,11 +74,6 @@ app.post('/api/persons', (req, res) => {
 app.put( '/api/persons',(req, res, next) => {
     const body = req.body;
 
-    const person = {
-        name : body.name,
-        number: body.number
-    }
-
     Person.findOneAndUpdate( {name : body.name}, {number: body.number}, { new: true }, (err, result) => {
         if(err){
             res.json({"there was an error in your request" : err});
