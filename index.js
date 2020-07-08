@@ -1,3 +1,6 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
@@ -36,16 +39,16 @@ app.get('/api/persons/:id', (req, res) => {
     const id = req.params.id;
 
     Person.findById(id)
-          .then( person => {
-              if(person === null || undefined ){
-                  res.status(404).end();
-              } else {
-                  res.json(person)
-              }
-          }) 
-          .catch( (err) => {
-              next(err)
-          })
+        .then(person => {
+            if (person === null || undefined) {
+                res.status(404).end();
+            } else {
+                res.json(person)
+            }
+        })
+        .catch((err) => {
+            next(err)
+        })
 });
 
 
@@ -53,8 +56,8 @@ app.get('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
     const body = req.body;
 
-    if(body.name === undefined ){
-        return res.status(400).json({ error: "name cannot be empty"});
+    if (body.name === undefined) {
+        return res.status(400).json({ error: "name cannot be empty" });
     }
 
     const person = new Person({
@@ -62,23 +65,23 @@ app.post('/api/persons', (req, res) => {
         number: body.number
     });
 
-    person.save() 
-          .then( (saved_person) => {
-              res.json(saved_person);
-          })  
+    person.save()
+        .then((saved_person) => {
+            res.json(saved_person);
+        })
 });
 
 //updating a resource
-app.put( '/api/persons',(req, res, next) => {
+app.put('/api/persons', (req, res, next) => {
     const body = req.body;
 
-    Person.findOneAndUpdate( {name : body.name}, {number: body.number}, { new: true }, (err, result) => {
-        if(err){
-            res.json({"there was an error in your request" : err});
+    Person.findOneAndUpdate({ name: body.name }, { number: body.number }, { new: true }, (err, result) => {
+        if (err) {
+            res.json({ "there was an error in your request": err });
         } else (
             res.json(result)
         )
-    }); 
+    });
 
 })
 
@@ -87,28 +90,28 @@ app.delete('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
 
     Person.findByIdAndDelete(id)
-          .then ( () => {
-              res.status(404).end();
-          })  
-          .catch( (err) => {
-              next(err)
-          })
+        .then(() => {
+            res.status(404).end();
+        })
+        .catch((err) => {
+            next(err)
+        })
 });
 
 //unknown endpoint
 const unknown_endpoint = (req, res) => {
-    res.status(404).send({error: "unknown endpoint"})
+    res.status(404).send({ error: "unknown endpoint" })
 }
 app.use(unknown_endpoint);
 
 //error middleware. 
-const error_handler = (err , req, res, next) => {
+const error_handler = (err, req, res, next) => {
     console.error(err.message);
 
-    if (err.name === 'CastError' && err.kind === 'objectId'){
-        return res.status(404).send({error : "malforamtted id"});
+    if (err.name === 'CastError' && err.kind === 'objectId') {
+        return res.status(404).send({ error: "malforamtted id" });
     } else if (err.name === 'ValidationError') {
-        return res.status(400).send({error: err.message})
+        return res.status(400).send({ error: err.message })
     }
     next(err)
 }
