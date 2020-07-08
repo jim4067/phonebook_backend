@@ -53,8 +53,8 @@ app.get('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
     const body = req.body;
 
-    if(body.content === undefined || null ){
-        res.status(404).send({ erro: "body undefined or null "});
+    if(body.name === undefined ){
+        return res.status(400).json({ error: "name cannot be empty"});
     }
 
     const person = new Person({
@@ -62,15 +62,13 @@ app.post('/api/persons', (req, res) => {
         number: body.number
     });
 
-    person.save()
-        .then((saved_person) => {
-            res.json(saved_person);
-        })
+    person.save() 
+          .then( (saved_person) => {
+              res.json(saved_person);
+          })  
 });
 
 //updating a resource
-//when you get the names in a dn array then comapre it with the nam in  the body of the request
-
 app.put( '/api/persons',(req, res, next) => {
     const body = req.body;
 
@@ -105,10 +103,12 @@ app.use(unknown_endpoint);
 
 //error middleware. 
 const error_handler = (err , req, res, next) => {
-    console.error(err);
+    console.error(err.message);
 
     if (err.name === 'CastError' && err.kind === 'objectId'){
         return res.status(404).send({error : "malforamtted id"});
+    } else if (err.name === 'ValidationError') {
+        return res.status(400).send({error: err.message})
     }
     next(err)
 }
